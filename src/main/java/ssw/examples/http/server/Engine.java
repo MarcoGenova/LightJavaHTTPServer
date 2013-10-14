@@ -3,26 +3,17 @@
  */
 package ssw.examples.http.server;
 
-import java.io.IOException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.protocol.HttpProcessor;
-import org.apache.http.protocol.HttpProcessorBuilder;
-import org.apache.http.protocol.HttpService;
-import org.apache.http.protocol.ResponseConnControl;
-import org.apache.http.protocol.ResponseContent;
-import org.apache.http.protocol.ResponseDate;
-import org.apache.http.protocol.ResponseServer;
-import org.apache.http.protocol.UriHttpRequestHandlerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ssw.examples.http.server.context.ServerConfig;
-import ssw.examples.http.server.handler.InternalRequestHandler;
-import ssw.examples.http.server.handler.RequestHandlerFactory;
+import ssw.examples.http.server.service.ServiceFacory;
+import ssw.examples.http.server.service.ServiceThread;
 
 /**
  * Http Interceptor Engine
+ *  
+ * documentation: http://hc.apache.org/httpcomponents-core-4.3.x/tutorial/html/index.html
  * 
  * @author m.genova
  * @since 1.0
@@ -36,42 +27,16 @@ public class Engine {
 	 * 
 	 */
 	public void start() {
-		Integer port = this.serverConfig.getPort();
-		String context = this.serverConfig.getContext();
-		
-		if(StringUtils.isBlank(context)) {
-			context = "*";
-		}
-		
-		String serverName = this.serverConfig.getServerName();
-		
-		if(StringUtils.isBlank(serverName)) {
-			serverName = "LightHttpServer/0.1";
-		}
-		
-		HttpProcessorBuilder builder = HttpProcessorBuilder.create();
-		HttpProcessor processor = builder.add(new ResponseDate())
-                .add(new ResponseServer(serverName))
-                .add(new ResponseContent())
-                .add(new ResponseConnControl()).build();
-		InternalRequestHandler requestHandler = RequestHandlerFactory.getRequestHandler("parameters fake");
-		UriHttpRequestHandlerMapper registry = new UriHttpRequestHandlerMapper();
-        registry.register(context, requestHandler);
-		
-        HttpService httpService = new HttpService(processor, registry);
-       
-        try {
-			service = new ServiceThread(port, httpService);
-		} catch (IOException e) {
-			logger.error("error in thear service initialization", e.getMessage());
-			System.exit(1);
-		}
-        
+		logger.info("Engine starting...");
+		service = ServiceFacory.createService(serverConfig);
         service.start();
+        logger.info("Engine started!");
 	}
 	
 	public void stop() {
+		logger.info("Engine stopping...");
 		service.interrupt();
+		logger.info("Engine stopped!");
 	}
 
 	/**
@@ -87,7 +52,7 @@ public class Engine {
 	public void setServerConfig(ServerConfig serverConfig) {
 		this.serverConfig = serverConfig;
 	}
-	
+
 	public static void main(String[] args) {
 		ServerConfig config = new ServerConfig();
 		config.setPort(9092);

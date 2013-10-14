@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
  * @author m.genova
  * @since 1.0
  */
-public class DefaultEntyFactory {
+public class DefaultEntityFactory {
 
 	private static Logger logger = LoggerFactory
-			.getLogger(DefaultEntyFactory.class);
+			.getLogger(DefaultEntityFactory.class);
 
 }
