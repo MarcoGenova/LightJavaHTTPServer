@@ -3,11 +3,17 @@
  */
 package ssw.examples.http.server;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ssw.examples.http.server.context.ServerConfig;
-import ssw.examples.http.server.service.ServiceFacory;
+import ssw.examples.http.server.config.ServerConfig;
+import ssw.examples.http.server.config.ServerConfigFactory;
+import ssw.examples.http.server.service.ServiceThreadFactory;
 import ssw.examples.http.server.service.ServiceThread;
 
 /**
@@ -28,7 +34,7 @@ public class Engine {
 	 */
 	public void start() {
 		logger.info("Engine starting...");
-		service = ServiceFacory.createService(serverConfig);
+		service = ServiceThreadFactory.createService(serverConfig);
         service.start();
         logger.info("Engine started!");
 	}
@@ -53,14 +59,34 @@ public class Engine {
 		this.serverConfig = serverConfig;
 	}
 
-	public static void main(String[] args) {
-		ServerConfig config = new ServerConfig();
-		config.setPort(9092);
+	public static void main(String[] args)  {
+		
+		if(args.length == 0) {
+			getUsage();
+			System.exit(1);
+		}
+		
+		FileSystem fileSystem = FileSystems.getDefault();
+		Path path = fileSystem.getPath(args[0]);
+		
+		if(Files.notExists(path)) {
+			getUsage();
+			System.exit(2);
+		}
+		
+		ServerConfigFactory factory = ServerConfigFactory.choosefactory(path);
+		ServerConfig config = factory.getServerConfig(path);
 		
 		Engine engine = new Engine();
 		engine.setServerConfig(config);
-		
 		engine.start();
 	}
 	
+
+	private static void getUsage() {
+		System.err.println("USAGE: java <optional-jvm> Engine <server-conf-file>");
+		System.err.println();
+		System.err.println();
+		System.err.println("<server-conf-file>: xml file of configuration, see unit tests");
+	}
 }

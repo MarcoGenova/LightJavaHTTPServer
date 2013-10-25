@@ -29,7 +29,7 @@ import org.apache.http.protocol.UriHttpRequestHandlerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ssw.examples.http.server.context.ServerConfig;
+import ssw.examples.http.server.config.ServerConfig;
 import ssw.examples.http.server.handler.InternalRequestHandler;
 import ssw.examples.http.server.handler.RequestHandlerFactory;
 
@@ -37,8 +37,8 @@ import ssw.examples.http.server.handler.RequestHandlerFactory;
  * @author m.genova
  * @since 1.0
  */
-public class ServiceFacory {
-	private static Logger logger = LoggerFactory.getLogger(ServiceFacory.class);
+public class ServiceThreadFactory {
+	private static Logger logger = LoggerFactory.getLogger(ServiceThreadFactory.class);
 	
 	/**
 	 * 
@@ -71,7 +71,7 @@ public class ServiceFacory {
 
 		try {
 
-			if (serverConfig.getEnableSSL()) {
+			if (serverConfig.getSslConfig().getEnableSSL()) {
 				SSLServerSocketFactory sslServerSocketFactory = createSSLContext(serverConfig);
 				service = new SecuredServiceThread(port, httpService,
 						sslServerSocketFactory);
@@ -110,7 +110,7 @@ public class ServiceFacory {
 
 		// Initialize SSL context
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
-		URL url = cl.getResource(serverConfig.getKeyStoreId());
+		URL url = cl.getResource(serverConfig.getSslConfig().getKeyStoreId());
 
 		if (url == null) {
 			System.out.println("Keystore not found");
@@ -118,8 +118,8 @@ public class ServiceFacory {
 		}
 
 		KeyStore keystore = KeyStore
-				.getInstance(serverConfig.getKeyStoreType());
-		String keyStorePasswd = serverConfig.getKeyStorePasswd();
+				.getInstance(serverConfig.getSslConfig().getKeyStoreType());
+		String keyStorePasswd = serverConfig.getSslConfig().getKeyStorePasswd();
 		keystore.load(url.openStream(), keyStorePasswd.toCharArray());
 		String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
 		KeyManagerFactory kmfactory = KeyManagerFactory
@@ -127,7 +127,7 @@ public class ServiceFacory {
 		kmfactory.init(keystore, keyStorePasswd.toCharArray());
 		KeyManager[] keymanagers = kmfactory.getKeyManagers();
 		SSLContext sslcontext = SSLContext.getInstance(serverConfig
-				.getSslContextType());
+				.getSslConfig().getSslContextType());
 		sslcontext.init(keymanagers, null, null);
 		sf = sslcontext.getServerSocketFactory();
 

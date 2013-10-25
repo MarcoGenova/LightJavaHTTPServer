@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serverConfig xmlns="http://www.ssw.com/example/http/server/config">
+    <context>rf*</context>
+    <port>9090</port>
+    <serverName>myServer</serverName>
+    <sslConfig enableSSL="false">
+        <!-- keyStoreId>my.value</keyStoreId>
+        <keyStorePasswd>myPsswd</keyStorePasswd>
+        <keyStoreType>TLS</keyStoreType>
+        <sslContextType>Context type</sslContextType-->
+    </sslConfig>
+</serverConfig>
