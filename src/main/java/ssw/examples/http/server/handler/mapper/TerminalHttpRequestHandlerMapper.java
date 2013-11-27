@@ -11,8 +11,8 @@ import org.apache.http.protocol.HttpRequestHandlerMapper;
  * @author m.genova
  * @since 1.0.0
  */
-public class RegExHttpRequestHandlerMapper implements HttpRequestHandlerMapper {
-
+public class TerminalHttpRequestHandlerMapper implements HttpRequestHandlerMapper {
+	
 	/* (non-Javadoc)
 	 * @see org.apache.http.protocol.HttpRequestHandlerMapper#lookup(org.apache.http.HttpRequest)
 	 */

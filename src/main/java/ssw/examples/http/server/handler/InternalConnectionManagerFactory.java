@@ -12,7 +12,7 @@ import org.apache.http.protocol.HttpService;
  * @author m.genova
  * @since 1.0
  */
-public class TerminalThreadFactory {
+public class InternalConnectionManagerFactory {
 	
 	/**
 	 * Gets Terminal Thread to manage communications
@@ -21,9 +21,9 @@ public class TerminalThreadFactory {
 	 * @param conn
 	 * @return
 	 */
-	static public TerminalThread getThread(final HttpService httpservice,
+	static public InternalConnectionManager getThread(final HttpService httpservice,
             final HttpServerConnection conn) {
-		return new TerminalThread(httpservice, conn);
+		return new InternalConnectionManager(httpservice, conn);
 	} 
 	
 	

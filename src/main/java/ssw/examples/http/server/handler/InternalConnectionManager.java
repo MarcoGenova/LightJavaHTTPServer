@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  * @author m.genova
  * @since 1.0
  */
-public class TerminalThread extends Thread {
-	private Logger logger = LoggerFactory.getLogger(TerminalThread.class);
+public class InternalConnectionManager extends Thread {
+	private Logger logger = LoggerFactory.getLogger(InternalConnectionManager.class);
 	private final HttpService httpservice;
     private final HttpServerConnection conn;
 	
-    public TerminalThread(
+    public InternalConnectionManager(
             final HttpService httpservice,
             final HttpServerConnection conn) {
         super();

@@ -16,7 +16,7 @@ import org.apache.http.protocol.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ssw.examples.http.server.handler.TerminalThreadFactory;
+import ssw.examples.http.server.handler.InternalConnectionManagerFactory;
 
 /**
  * Custom Service Thread
@@ -73,7 +73,7 @@ public class ServiceThread extends Thread {
                  HttpServerConnection conn = this.connFactory.createConnection(socket);
 
                  // Start worker thread
-                 Thread t = TerminalThreadFactory.getThread(this.httpService, conn);
+                 Thread t = InternalConnectionManagerFactory.getThread(this.httpService, conn);
                  t.setDaemon(true);
                  t.start();
              } catch (InterruptedIOException ex) {

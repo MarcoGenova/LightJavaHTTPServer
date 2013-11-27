@@ -16,21 +16,26 @@ import org.apache.http.entity.StringEntity;
  * @since 1.0
  */
 public class DefaultRequestHandler extends InternalRequestHandler {
-
+	
+	private String identifier;
+	
 	@Override
 	protected void manageRequest(HttpRequest request) {
-		// FAKE
+		identifier = HandlerUtility.extractIdentifer(request, Boolean.TRUE);
 	}
 
 	@Override
 	protected void prepareResponse(HttpResponse response) {
-		// TODO Auto-generated method stub
 		response.setStatusCode(HttpStatus.SC_OK);
-        StringEntity entity = new StringEntity(
-                "LOGOFFALL",
-        ContentType.create("plain/text", "ISO-8859-1"));
-        response.setEntity(entity);
+		ContentType contentType = ContentType.create("text/html", "ISO-8859-1");
 		
+		StringBuilder textualresponse = new StringBuilder("<b>PONG: ");
+		textualresponse.append(identifier);
+		textualresponse.append("</b>");
+		
+		StringEntity entity = new StringEntity(textualresponse.toString(), contentType);
+
+        response.setEntity(entity);
 	}
 
 }
